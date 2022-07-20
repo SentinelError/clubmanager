@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>events</title>
+</head>
+<body>
+
+{% extends "App2/header.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h1>Venues</h1>
+
+    {% for venue in venue1 %}
+
+    <div class="card">
+        <h5 class="card-header">
+            {{ venue }}
+        </h5>
+        <div class="card-body">
+            <h5 class="card-title">Venue: {{ venue.address }}</h5>
+            <p class="card-text">
+
+                <ul>
+                <li>Contact Number: {{ venue.phone }}</li>
+
+                </ul>
+            </p>
+        </div>
+        <div class="card-footer text-muted">
+            <a href="/updatevenues/{{ venue.id }}" class="btn btn-outline-secondary">Edit Venue Details</a>
+            <a href="/deletevenue/{{ venue.id }}" class="btn btn-outline-danger">Delete</a>
+        </div>
+    </div>
+    <br/>
+    {% endfor %}
+
+{% else %}
+	<h1>Sorry! You must be logged in to view available venues.</h1>
+	<br/>
+	<p>Please <a href="/login">login</a> to access this page.</p>
+    </form>
+{% endif %}
+
+
+{% endblock %}
+
+
+</body>
+</html>
