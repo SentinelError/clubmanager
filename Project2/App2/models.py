@@ -40,12 +40,12 @@ class Venue(models.Model):
 class Event(BaseModel):
 
     name = models.CharField('Event Name', max_length=120)
-    overseer = models.CharField('Overseer', default='', max_length=20)
+    overseer = models.ForeignKey(User, default='', blank=True, null=False, on_delete=models.CASCADE, related_name='Overseer')
     event_club = models.ForeignKey(Club, default='', blank=True, null=False, on_delete=models.CASCADE)
     event_date = models.DateTimeField('Event Date')
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
-    attendees = models.ManyToManyField(User, blank=True)
+    attendees = models.ManyToManyField(User, blank=True, related_name='Attendees')
 
 
     def __str__(self):

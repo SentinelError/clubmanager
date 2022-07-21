@@ -64,7 +64,7 @@ class EventFormA(ModelForm):
 		}
 		widgets = {
 			'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Event Name'}),
-			'overseer': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Overseer'}),
+			'overseer': forms.Select(attrs={'class':'form-select', 'placeholder':'Event Overseer'}),
 			'event_club': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Event Club'}),
 			'event_date': forms.DateTimeInput(attrs={'class':'form-control', 'placeholder':'Event Date'}),
 			'venue': forms.Select(attrs={'class':'form-select', 'placeholder':'Venue'}),
@@ -88,7 +88,7 @@ class EventFormS(ModelForm):
 		}
 		widgets = {
 			'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Event Name', 'readonly':'readonly'}),
-			'overseer': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Overseer'}),
+			'overseer': forms.Select(attrs={'class':'form-select', 'placeholder':'Event Overseer'}),
 			'event_club': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Event Club'}),
 			'event_date': forms.DateTimeInput(attrs={'class':'form-control', 'placeholder':'Event Date'}),
 			'venue': forms.Select(attrs={'class':'form-select', 'placeholder':'Venue'}),
