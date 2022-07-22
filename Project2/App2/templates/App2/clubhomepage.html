@@ -18,9 +18,9 @@
 {% if user.is_authenticated %}
 
     <div>
-        <h1>Club Homepage</h1>
+        <h1>Welcome, {{ user.first_name }}</h1>
 
-        <p>Welcome to the club homepage,</p>
+        <p>These are the events your club is participating in :</p>
     </div>
 
 {% else %}

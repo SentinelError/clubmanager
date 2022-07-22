@@ -43,7 +43,7 @@ def changepassword(request):
 		if form.is_valid():
 			user = form.save()
 			update_session_auth_hash(request, form.user)
-			messages.success(request, "Registration successful.")
+			messages.success(request, ("Registration successful."))
 			return HttpResponseRedirect("/")
 	else:
 		form = PasswordChangeForm(user=request.user)
@@ -60,16 +60,16 @@ def login_request(request):
 				login(request, user)
 				return HttpResponseRedirect('/clubhomepage')
 			else:
-				messages.error(request,"Invalid username or password.")
+				messages.error(request, ("Invalid username or password."))
 		else:
-			messages.error(request,"Invalid username or password.")
+			messages.error(request, ("Invalid username or password."))
 	form = AuthenticationForm()
 	return render(request=request, template_name="App2/login.html", context={"login_form":form})
 
 def logout_request(request):
 	logout(request)
-
-	return render(request=request, template_name='App2/logout.html')
+	messages.success(request, ("Logout successful."))
+	return render(request=request, template_name='App2/homepage.html')
 
 def homepage(request):
 	return render(request=request, template_name='App2/homepage.html')
@@ -84,13 +84,19 @@ def events(request):
 
 def updevents(request, eventid):
 	event = Event.objects.get(pk=eventid)
-	if request.user.is_superuser:
-		form = EventFormA(request.POST or None, instance=event)
-	else:
-		form = EventFormS(request.POST or None, instance=event)
+	if request.user == event.overseer or request.user.is_superuser:
+		if request.user.is_superuser:
+			form = EventFormA(request.POST or None, instance=event)
+		else:
+			form = EventFormS(request.POST or None, instance=event)
 
-	if form.is_valid():
-		form.save()
+		if form.is_valid():
+			form.save()
+			messages.success(request, ("Event Updated."))
+			return HttpResponseRedirect('/events')
+
+	else:
+		messages.error(request, ("Only the Admin or the Report Author can update the event."))
 		return HttpResponseRedirect('/events')
 
 	return render(request, 'App2/updateevents.html',
@@ -109,6 +115,7 @@ def addevents(request):
 
 		if form.is_valid():
 			form.save()
+			messages.success(request, ("Event Added."))
 			return HttpResponseRedirect('/events')
 	if request.user.is_superuser:
 		form = EventFormA()
@@ -118,8 +125,13 @@ def addevents(request):
 
 def delevents(request,eventid):
 	event = Event.objects.get(pk=eventid)
-	event.delete()
-	return HttpResponseRedirect('/events')
+	if request.user == event.overseer or request.user.is_superuser:
+		event.delete()
+		messages.success(request, ("Event Deleted."))
+		return HttpResponseRedirect('/events')
+	else:
+		messages.error(request, ("Event deletion failed. Only Event Overseer or Admin can delete events."))
+		return HttpResponseRedirect('/events')
 
 def venues(request):
 	venue1 = Venue.objects.all()
@@ -131,6 +143,7 @@ def updvenues(request, venueid):
 
 	if form.is_valid():
 		form.save()
+		messages.success(request, ("Venue Updated."))
 		return HttpResponseRedirect('/venues')
 
 	return render(request, 'App2/updatevenues.html',
@@ -139,8 +152,13 @@ def updvenues(request, venueid):
 
 def delvenues(request,venueid):
 	venue = Venue.objects.get(pk=venueid)
-	venue.delete()
-	return HttpResponseRedirect('/venues')
+	if request.user.is_superuser:
+		venue.delete()
+		messages.success(request, ("Venue Deleted."))
+		return HttpResponseRedirect('/venues')
+	else:
+		messages.error(request, ("Venue deletion failed. Only Admin can delete events."))
+		return HttpResponseRedirect('/venues')
 
 def addvenues(request):
 
@@ -148,6 +166,7 @@ def addvenues(request):
 		form = VenueForm(request.POST)
 		if form.is_valid():
 			form.save()
+			messages.success(request, ("Event Venue Added."))
 			return HttpResponseRedirect('/venues')
 	form = VenueForm()
 	return render(request=request, template_name='App2/addvenue.html', context={'form':form,})
@@ -162,16 +181,23 @@ def addreport(request):
 		form = ReportForm(request.POST)
 		if form.is_valid():
 			form.save()
+			messages.success(request, ("Report Added."))
 			return HttpResponseRedirect('/reports')
 	form = ReportForm()
 	return render(request=request, template_name='App2/addreport.html', context={'form':form,})
 
 def updreport(request, reportid):
 	report = Report.objects.get(pk=reportid)
-	form = ReportForm(request.POST or None, instance=report)
+	if request.user == report.report_author or request.user.is_superuser:
+		form = ReportForm(request.POST or None, instance=report)
 
-	if form.is_valid():
-		form.save()
+		if form.is_valid():
+			form.save()
+			messages.success(request, ("Report updated."))
+			return HttpResponseRedirect('/reports')
+
+	else:
+		messages.error(request, ("Only the Admin or the Report Author can update the report."))
 		return HttpResponseRedirect('/reports')
 
 	return render(request, 'App2/updatereport.html',
@@ -180,5 +206,10 @@ def updreport(request, reportid):
 
 def delreport(request,reportid):
 	report = Report.objects.get(pk=reportid)
-	report.delete()
-	return HttpResponseRedirect('/reports')
+	if request.user == report.report_author or request.user.is_superuser:
+		report.delete()
+		messages.success(request, ("Report Deleted."))
+		return HttpResponseRedirect('/reports')
+	else:
+		messages.error(request, ("Only the Admin or the Report Author can delete the report."))
+		return HttpResponseRedirect('/reports')
