@@ -20,7 +20,38 @@
     <div>
         <h1>Welcome, {{ user.first_name }}</h1>
 
-        <p>These are the events your club is participating in :</p>
+        <p>The following are the events you will be attending :</p>
+
+        {% for event in events %}
+
+
+        <div class="card">
+            <h5 class="card-header">
+                {{ event }}
+            </h5>
+            <div class="card-body">
+                <h5 class="card-title">Club: {{ event.event_club }}</h5>
+                <p class="card-text">
+
+                <ul>
+                    <li>Event Overseer: {{ event.overseer }}</li>
+                    <li>Venue: {{ event.venue }}</li>
+                    <li>Date: {{ event.event_date }}</li>
+                    <li>Description: {{ event.description }}</li>
+                    <li>Attendees:<br/>
+                        {% for user in event.attendees.all %}
+
+                        {{ user }}<br/>
+
+                        {% endfor %}
+                    </li>
+
+                </ul>
+
+                </p>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 
 {% else %}
