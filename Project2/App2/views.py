@@ -3,7 +3,7 @@ from .forms import NewUserForm, EventFormA ,EventFormS, VenueForm, StudentForm, 
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from .models import Event,Venue,Report
+from .models import Event,Venue,Report,Student
 
 
 def register_request(request):
@@ -75,7 +75,16 @@ def homepage(request):
 	return render(request=request, template_name='App2/homepage.html')
 
 def clubhomepage(request):
-	return render(request=request, template_name='App2/clubhomepage.html')
+	if request.user.is_authenticated:
+		Identity = request.user.id
+		events = Event.objects.filter(attendees=Identity)
+		return render(request,'App2/clubhomepage.html', {"events":events})
+
+
+	else:
+		messages.error(request, ("You are not logged in."))
+		return HttpResponseRedirect('/homepage')
+
 
 def events(request):
 	event1 = Event.objects.all().order_by('event_date')
