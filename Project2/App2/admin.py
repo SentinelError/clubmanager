@@ -3,6 +3,9 @@ from .models import Venue
 from .models import Event
 from .models import Student
 from .models import Report
+from .models import Club
+from .models import Field
+from .models import Year
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
@@ -26,3 +29,6 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Venue)
 admin.site.register(Event)
 admin.site.register(Report)
+admin.site.register(Club)
+admin.site.register(Field)
+admin.site.register(Year)
