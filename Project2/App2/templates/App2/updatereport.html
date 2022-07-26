@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
 <body>
 
@@ -12,9 +13,9 @@
 
 {% if user.is_authenticated %}
 
-	<h1>Update Report</h1>
+	<h1 id="header">Update Report</h1>
 	<br/>
-	<form action="" method=POST>
+	<form action="" method=POST class="frm">
 		{% csrf_token %}
 		{{ form.media }}
 		{{ form.as_p }}
@@ -22,7 +23,7 @@
 		<input type="submit" value="Update" class="btn btn-secondary">
 
 {% else %}
-	<h1>Sorry! You Must Be Logged In To View This Page</h1>
+	<h1 id="head">Sorry! You Must Be Logged In To View This Page</h1>
 	<br/>
 	<p>Please <a href="/login">login</a> to edit the document</p>
     </form>

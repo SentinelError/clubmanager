@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>events</title>
+    <title>Events</title>
 </head>
 <body>
 
@@ -14,9 +14,9 @@
 
         {% if user.is_superuser %}
 
-            <h1>Events</h1>
+            <h1 id="header">Events</h1>
 
-            <br/><br/>
+            <br/><br>
 
                 {% for event in event1 %}
 
@@ -51,7 +51,7 @@
                     <br/>
                     {% endfor %}
         {% else %}
-            <h1>Events</h1>
+            <h1 id="head">Events</h1>
 
                 {% for event in event1 %}
 

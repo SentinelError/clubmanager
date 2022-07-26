@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+
+
 </head>
 <body>
 {% extends "App2/header.html" %}
@@ -13,10 +15,12 @@
 
 <!--Login-->
 <div class="container py-5">
-  <h1>Login</h1>
-  <form action="" method="POST">
+  <h1 id="header">Login</h1>
+  <br/><br/>
+  <form action="" method="POST" class="frm">
     {% csrf_token %}
     {{ login_form|crispy }}
+    <br/><br/>
     <button class="btn btn-primary" type="submit">Login</button>
   </form>
   <p class="text-center">Don't have an account? <a href="/register">Create an account</a>.</p>

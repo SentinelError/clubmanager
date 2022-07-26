@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<h1>Admin Event Approval</h1>
+<h1 id="header">Admin Event Approval</h1>
 <br/><br/>
-<form action="" method=POST>
+<form action="" method=POST class="frm">
 	{% csrf_token %}
 	<table class="table table-striped table-hover table-bordered ">
-		<thead class="thead-dark">
+		<thead class="thead-light">
 			<tr>
 				<th scope="col">Event Name</th>
 				<th scope="col">Approved</th>
@@ -16,7 +16,7 @@
 		<tbody>
 		{% for event in event2 %}
 		<tr>
-			<td>
+			<td id="head">
 				{{ event }}
 			</td>
 			<td>

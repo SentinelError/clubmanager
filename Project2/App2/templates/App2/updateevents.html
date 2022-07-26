@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+
+
 </head>
 <body>
 
@@ -14,17 +17,18 @@
 
 	{% if user.is_superuser or user == event.overseer %}
 
-		<h1>Update Event</h1>
+		<h1 id="header">Update Event</h1>
 		<br/>
-		<form action="" method=POST>
+		<form action="" method=POST class="frm">
 			{% csrf_token %}
 			{{ form.as_p }}
 			<br/>
 			<input type="submit" value="Update" class="btn btn-secondary">
+		</form>
 
 	{% else %}
 
-		<h1>Update Error</h1>
+		<h1 id="head">Update Error</h1>
 		<br/>
 		<p> Only the Event Overseer or Admin can edit this event.</p>
 
@@ -34,7 +38,7 @@
 	<h1>Sorry! You Must Be Logged In To View This Page</h1>
 	<br/>
 	<p>Please <a href="/login">login</a> to edit the document</p>
-    </form>
+
 {% endif %}
 
 

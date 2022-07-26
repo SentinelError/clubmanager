@@ -10,7 +10,8 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<h1>Venues</h1>
+{% if user.is_superuser %}
+<h1 id="header">Venues</h1>
 
     <br/><br/>
 
@@ -37,7 +38,7 @@
     </div>
     <br/>
     {% endfor %}
-
+{% endif %}
 {% else %}
 	<h1>Sorry! You must be logged in to view available venues.</h1>
 	<br/>

@@ -12,9 +12,9 @@
 
 {% if user.is_authenticated %}
 
-	<h1>Add Report</h1>
+	<h1 id="header">Add Report</h1>
 	<br/><br/>
-		<form action="" method=POST>
+		<form action="" method=POST class="frm">
 			{% csrf_token %}
 
 			{{ form.media }}
