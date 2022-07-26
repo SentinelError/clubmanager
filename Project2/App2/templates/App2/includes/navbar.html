@@ -7,7 +7,9 @@
     <title>Title</title>
 
     <style>
-
+    .bg-custom-2 {
+        background-image: linear-gradient(15deg, #ee0979 0%, #ff6a00 100%);
+    }
     </style>
 
 </head>
@@ -17,7 +19,7 @@
 
     {% if user.is_superuser %}
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-custom-2">
           <a class="navbar-brand" href="/">CMS</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -48,14 +50,11 @@
                   <a class="dropdown-item" href="/eventapproval">Event Approval</a>
                 </div>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Reports
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
-                  <a class="dropdown-item" href="/reports">Archive</a>
-                  <a class="dropdown-item" href="/addreport">Add Reports</a>
-                </div>
+              <li class="nav-item">
+                <a class="nav-link" href="/reports">View Archive</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users">View Users</a>
               </li>
             </ul>
             <ul class="navbar-nav">
@@ -86,7 +85,7 @@
         </nav>
     {% else %}
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="/">CMS</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -106,8 +105,14 @@
                   <a class="dropdown-item" href="/addevent">Add Events</a>
                 </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/addreport">Add Report</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reports
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                  <a class="dropdown-item" href="/reports">Archive</a>
+                  <a class="dropdown-item" href="/addreport">Add Reports</a>
+                </div>
               </li>
             </ul>
             <ul class="navbar-nav">
@@ -138,7 +143,7 @@
 
 {% else %}
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="/">CMS</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent3" aria-controls="navbarSupportedContent3" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

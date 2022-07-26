@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>events</title>
+</head>
+<body>
+
+{% extends "App2/header.html" %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+        {% if user.is_superuser %}
+
+            <h1>Club Users</h1>
+
+                <br/><br/>
+
+                {% for user in user1 %}
+
+                    <div class="card">
+                        <h5 class="card-header">
+                            Username: {{ user }}
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text">
+
+                            <ul>
+                                <li>First Name: {{ user.first_name}}</li>
+                                <li>Last Name: {{ user.last_name}}</li>
+                                <li>Email: {{ user.email }}</li>
+                            </ul>
+                            </p>
+                        </div>
+                    </div>
+                <br/><br/>
+                {% endfor %}
+        {% endif %}
+
+    {% endif %}
+
+
+{% endblock %}
+
+
+</body>
+</html>

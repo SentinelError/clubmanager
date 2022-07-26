@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from . import views
 
@@ -25,4 +27,5 @@ urlpatterns = [
     path("deletereport/<reportid>", views.delreport, name="delreport" ),
     path("password/", views.changepassword, name="changepassword" ),
     path("eventapproval", views.eventapproval, name="eventapproval"),
+    path("users", views.users, name="users" ),
 ]

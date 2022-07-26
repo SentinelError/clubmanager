@@ -1,6 +1,7 @@
 from django.shortcuts import  render, HttpResponseRedirect
 from .forms import NewUserForm, EventFormA ,EventFormS, VenueForm, StudentForm, ReportForm, NewEditForm
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from .models import Event,Venue,Report,Student
@@ -166,7 +167,7 @@ def delvenues(request,venueid):
 		messages.success(request, ("Venue Deleted."))
 		return HttpResponseRedirect('/venues')
 	else:
-		messages.error(request, ("Venue deletion failed. Only Admin can delete events."))
+		messages.error(request, ("Venue deletion failed. Only Admin can delete venues."))
 		return HttpResponseRedirect('/venues')
 
 def addvenues(request):
@@ -248,7 +249,7 @@ def eventapproval(request):
 				Event.objects.filter(pk=int(y)).update(approved=False)
 
 			messages.success(request, ("Event Approval Updated."))
-			return HttpResponseRedirect('/events')
+			return HttpResponseRedirect('/eventapproval')
 		else:
 			return render(request=request, template_name='App2/eventapproval.html', context={"event2":event2})
 
@@ -256,3 +257,8 @@ def eventapproval(request):
 	else:
 		messages.error(request, ("You need to be an Admin to acces this page"))
 		return HttpResponseRedirect('/events')
+
+
+def users(request):
+	user1 = User.objects.all().order_by('username')
+	return render(request, 'App2/users.html', {'user1': user1})
