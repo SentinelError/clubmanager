@@ -222,3 +222,37 @@ def delreport(request,reportid):
 	else:
 		messages.error(request, ("Only the Admin or the Report Author can delete the report."))
 		return HttpResponseRedirect('/reports')
+
+def eventapproval(request):
+	event2 = Event.objects.all()
+
+	events_all = Event.objects.all()
+	events_all_ids = []
+
+	for i in range(0, len(events_all), 1):
+		events_all_ids.append(str(events_all[i].id))
+
+	if request.user.is_superuser:
+		if request.method == "POST":
+			id_list = request.POST.getlist('boxes')
+
+			#update database
+
+			for x in id_list:
+				Event.objects.filter(pk=int(x)).update(approved=True)
+
+			id_set_false = set(events_all_ids) - set(id_list)
+			id_list_false = list(id_set_false)
+
+			for y in id_list_false:
+				Event.objects.filter(pk=int(y)).update(approved=False)
+
+			messages.success(request, ("Event Approval Updated."))
+			return HttpResponseRedirect('/events')
+		else:
+			return render(request=request, template_name='App2/eventapproval.html', context={"event2":event2})
+
+
+	else:
+		messages.error(request, ("You need to be an Admin to acces this page"))
+		return HttpResponseRedirect('/events')

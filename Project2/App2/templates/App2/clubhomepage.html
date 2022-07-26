@@ -24,6 +24,7 @@
 
         {% for event in events %}
 
+        {% if event.approved %}
 
         <div class="card">
             <h5 class="card-header">
@@ -51,6 +52,7 @@
                 </p>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 

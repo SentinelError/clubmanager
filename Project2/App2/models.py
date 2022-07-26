@@ -46,6 +46,7 @@ class Event(BaseModel):
     venue = models.ForeignKey(Venue, blank=True, null=True, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     attendees = models.ManyToManyField(User, blank=True, related_name='Attendees')
+    approved = models.BooleanField(default=False)
 
 
     def __str__(self):

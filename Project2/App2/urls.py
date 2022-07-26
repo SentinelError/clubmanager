@@ -24,4 +24,5 @@ urlpatterns = [
     path("updatereport/<reportid>", views.updreport, name="updatereport" ),
     path("deletereport/<reportid>", views.delreport, name="delreport" ),
     path("password/", views.changepassword, name="changepassword" ),
+    path("eventapproval", views.eventapproval, name="eventapproval"),
 ]
