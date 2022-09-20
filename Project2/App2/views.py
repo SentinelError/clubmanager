@@ -12,7 +12,7 @@ from .models import Event, Venue, Report, Student
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
+
 
 
 # Registration View
@@ -426,21 +426,27 @@ def users(request):
 def printreport(request, reportid):
     reports = get_object_or_404(Report, pk=reportid)
 
-    template_path = 'App2/reportpdf.html'
-    context = {'report': reports}
+    if request.user == reports.report_author or request.user.is_superuser:
 
-    # Create a Django response object, and specify content_type as pdf
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        template_path = 'App2/reportpdf.html'
+        context = {'report': reports}
 
-    # find the template and render it.
-    template = get_template(template_path)
-    html = template.render(context)
+        # Create a Django response object, and specify content_type as pdf
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Report.pdf"'
 
-    # create a pdf
-    pisa_status = pisa.CreatePDF(html, dest=response, )
+        # find the template and render it.
+        template = get_template(template_path)
+        html = template.render(context)
 
-    # if error then show some funny view
-    if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
+        # create a pdf
+        pisa_status = pisa.CreatePDF(html, dest=response, )
+
+        # if error then show some funny view
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return response
+
+    else:
+        messages.error(request, ("Only the Admin or the Report Author can print the report."))
+        return HttpResponseRedirect('/reports')
