@@ -45,13 +45,22 @@ def register_request(request):
 def edit_request(request):
     if request.method == "POST":
         form = NewEditForm(request.POST, instance=request.user)
-        if form.is_valid():
+        Sform = StudentForm(request.POST, instance=request.user)
+        if form.is_valid() and Sform.is_valid():
             user = form.save()
+
+            student = Sform.save(commit=False)
+            student.user = user
+
+            student.save()
+
             messages.success(request, ("Profile updated."))
             return HttpResponseRedirect("/clubhomepage")
+        messages.error(request, "Unsuccessful update. Invalid information.")
     else:
         form = NewEditForm(instance=request.user)
-    return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, })
+        Sform = StudentForm(instance=request.user)
+    return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, "Student": Sform })
 
 
 # Change Password View
