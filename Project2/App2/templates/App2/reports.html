@@ -27,13 +27,14 @@
                 <ul>
                 <li>Date: {{ report.report_date }}</li>
                 <li>Representative: {{ report.report_author }}</li>
-                <li>Report: {{ report.body }}</li>
+                <li>Report: {{ report.body | safe }}</li>
                 </ul>
             </p>
         </div>
         <div class="card-footer text-muted">
             <a href="/updatereport/{{ report.id }}" class="btn btn-outline-secondary">Edit Report Details</a>
             <a href="/deletereport/{{ report.id }}" class="btn btn-outline-danger">Delete</a>
+            <a href="/printreport/{{ report.id }}" class="btn btn-outline-primary">Print Report</a>
         </div>
     </div>
     <br/>

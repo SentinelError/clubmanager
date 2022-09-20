@@ -1,7 +1,7 @@
 import calendar
 from calendar import HTMLCalendar
 from datetime import datetime
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from .forms import NewUserForm, EventFormA, EventFormS, VenueForm, StudentForm, ReportForm, NewEditForm
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -9,6 +9,13 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from .models import Event, Venue, Report, Student
 
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+
+
+# Registration View
 
 def register_request(request):
     if request.method == "POST":
@@ -33,6 +40,8 @@ def register_request(request):
                   context={"register_form": form, "Student": Sform})
 
 
+# Edit Profile View
+
 def edit_request(request):
     if request.method == "POST":
         form = NewEditForm(request.POST, instance=request.user)
@@ -44,6 +53,8 @@ def edit_request(request):
         form = NewEditForm(instance=request.user)
     return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, })
 
+
+# Change Password View
 
 def changepassword(request):
     if request.method == "POST":
@@ -57,6 +68,8 @@ def changepassword(request):
         form = PasswordChangeForm(user=request.user)
     return render(request=request, template_name="App2/passwordchange.html", context={"passwordchange_form": form, })
 
+
+# Login View
 
 def login_request(request):
     if request.method == "POST":
@@ -76,16 +89,22 @@ def login_request(request):
     return render(request=request, template_name="App2/login.html", context={"login_form": form})
 
 
+# Logout View
+
 def logout_request(request):
     logout(request)
     messages.success(request, ("Logout successful."))
     return HttpResponseRedirect('/')
-    #return render(request=request, template_name='App2/homepage.html')
+    # return render(request=request, template_name='App2/homepage.html')
 
+
+# Homepage View
 
 def homepage(request):
     return render(request=request, template_name='App2/homepage.html')
 
+
+# ClubHomepage View
 
 def clubhomepage(request, year=datetime.now().year, month=datetime.now().strftime('%B')):
     if request.user.is_authenticated:
@@ -101,20 +120,22 @@ def clubhomepage(request, year=datetime.now().year, month=datetime.now().strftim
         Identity = request.user.id
         events = Event.objects.filter(attendees=Identity,
                                       event_date__year=year,
-                                      event_date__month = monthnum).order_by('event_date')
+                                      event_date__month=monthnum).order_by('event_date')
         return render(request, 'App2/clubhomepage.html',
                       {"events": events,
                        "year": year,
                        "month": month,
                        "monthnum": monthnum,
                        "cal": cal,
-                       "cyear":cyear,})
+                       "cyear": cyear, })
 
 
     else:
         messages.error(request, ("You are not logged in."))
         return HttpResponseRedirect('/homepage')
 
+
+# Events View
 
 def events(request):
     if request.user.is_authenticated:
@@ -123,6 +144,9 @@ def events(request):
     else:
         messages.error(request, ("Please login to view events."))
         return HttpResponseRedirect('/homepage')
+
+
+# Update Events View
 
 def updevents(request, eventid):
     if request.user.is_authenticated:
@@ -151,6 +175,8 @@ def updevents(request, eventid):
                    'form': form})
 
 
+# Add Events View
+
 def addevents(request):
     if request.user.is_authenticated:
         initial_data = {
@@ -176,6 +202,8 @@ def addevents(request):
     return render(request=request, template_name='App2/addevent.html', context={'form': form, })
 
 
+# Event Deletion View
+
 def delevents(request, eventid):
     if request.user.is_authenticated:
         event = Event.objects.get(pk=eventid)
@@ -191,6 +219,8 @@ def delevents(request, eventid):
         return HttpResponseRedirect('/')
 
 
+# Venues View
+
 def venues(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -204,6 +234,8 @@ def venues(request):
         messages.error(request, ("Please login to view venues."))
         return HttpResponseRedirect('/')
 
+
+# Update Venues View
 
 def updvenues(request, venueid):
     if request.user.is_authenticated:
@@ -229,6 +261,8 @@ def updvenues(request, venueid):
         return HttpResponseRedirect('/')
 
 
+# Delete Venues View
+
 def delvenues(request, venueid):
     if request.user.is_authenticated:
         venue = Venue.objects.get(pk=venueid)
@@ -243,6 +277,8 @@ def delvenues(request, venueid):
         messages.error(request, ("Please login to delete venues."))
         return HttpResponseRedirect('/')
 
+
+# Add Venues View
 
 def addvenues(request):
     if request.user.is_authenticated:
@@ -267,6 +303,8 @@ def addvenues(request):
         return HttpResponseRedirect('/')
 
 
+# Report View
+
 def reports(request):
     if request.user.is_authenticated:
         report1 = Report.objects.all()
@@ -275,6 +313,8 @@ def reports(request):
         messages.error(request, ("Please login to view the archive"))
         return HttpResponseRedirect('/')
 
+
+# Add Report View
 
 def addreport(request):
     if request.user.is_authenticated:
@@ -290,6 +330,8 @@ def addreport(request):
         messages.error(request, ("Please login to add a report"))
         return HttpResponseRedirect('/')
 
+
+# Update Report View
 
 def updreport(request, reportid):
     report = Report.objects.get(pk=reportid)
@@ -310,6 +352,8 @@ def updreport(request, reportid):
                    'form': form})
 
 
+# Delete Report View
+
 def delreport(request, reportid):
     report = Report.objects.get(pk=reportid)
     if request.user == report.report_author or request.user.is_superuser:
@@ -320,6 +364,8 @@ def delreport(request, reportid):
         messages.error(request, ("Only the Admin or the Report Author can delete the report."))
         return HttpResponseRedirect('/reports')
 
+
+# Event Approval View
 
 def eventapproval(request):
     event2 = Event.objects.all()
@@ -356,6 +402,8 @@ def eventapproval(request):
         return HttpResponseRedirect('/events')
 
 
+# All Users View
+
 def users(request):
     if request.user.is_authenticated:
 
@@ -371,3 +419,28 @@ def users(request):
     else:
         messages.error(request, ("Please login to view users."))
         return HttpResponseRedirect('/')
+
+
+# Generate Text View
+
+def printreport(request, reportid):
+    reports = get_object_or_404(Report, pk=reportid)
+
+    template_path = 'App2/reportpdf.html'
+    context = {'report': reports}
+
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(html, dest=response, )
+
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
