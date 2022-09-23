@@ -148,8 +148,13 @@ def clubhomepage(request, year=datetime.now().year, month=datetime.now().strftim
 
 def events(request):
     if request.user.is_authenticated:
-        event1 = Event.objects.all().order_by('event_date')
-        return render(request, 'App2/events.html', {'event1': event1})
+
+        p = Paginator(Event.objects.all().order_by('event_date'), 3)
+        page = request.GET.get('page')
+        event1 = p.get_page(page)
+        pg = 'n' * event1.paginator.num_pages
+
+        return render(request, 'App2/events.html', {'event1': event1, 'pg': pg})
     else:
         messages.error(request, ("Please login to view events."))
         return HttpResponseRedirect('/homepage')
@@ -308,11 +313,11 @@ def addvenues(request):
             return render(request=request, template_name='App2/addvenue.html', context={'form': form, })
 
         else:
-            messages.error(request, ("Only Admin can view venues"))
+            messages.error(request, "Only Admin can view venues")
             return HttpResponseRedirect('/')
 
     else:
-        messages.error(request, ("Please login to delete events."))
+        messages.error(request, "Please login to delete events.")
         return HttpResponseRedirect('/')
 
 
@@ -320,10 +325,15 @@ def addvenues(request):
 
 def reports(request):
     if request.user.is_authenticated:
-        report1 = Report.objects.all()
-        return render(request, 'App2/reports.html', {'report1': report1})
+
+        p = Paginator(Report.objects.all().order_by('report_date'), 3)
+        page = request.GET.get('page')
+        report1 = p.get_page(page)
+        pg = 'n' * report1.paginator.num_pages
+
+        return render(request, 'App2/reports.html', {'report1': report1, 'pg': pg, })
     else:
-        messages.error(request, ("Please login to view the archive"))
+        messages.error(request, "Please login to view the archive")
         return HttpResponseRedirect('/')
 
 
@@ -422,8 +432,12 @@ def users(request):
 
         if request.user.is_superuser:
 
-            user1 = User.objects.all().order_by('username')
-            return render(request, 'App2/users.html', {'user1': user1})
+            p = Paginator(User.objects.all().order_by('username'), 5)
+            page = request.GET.get('page')
+            user1 = p.get_page(page)
+            pg = 'n' * user1.paginator.num_pages
+
+            return render(request, 'App2/users.html', {'user1': user1, 'pg': pg,})
 
         else:
             messages.error(request, "Only Admin can view users")
@@ -434,7 +448,7 @@ def users(request):
         return HttpResponseRedirect('/')
 
 
-# Generate Text View
+# Print PDF View
 
 def printreport(request, reportid):
     reports = get_object_or_404(Report, pk=reportid)

@@ -25,13 +25,13 @@
                             Username: {{ user }}
                         </h5>
                         <div class="card-body">
-                            <p class="card-text">
+                            <p class="card-text"></p>
                                 <ul>
                                     <li>First Name: {{ user.first_name }}</li>
                                     <li>Last Name: {{ user.last_name }}</li>
                                     <li>Email: {{ user.email }}</li>
                                 </ul>
-                            </p>
+
                         </div>
                         <div class="card-footer text-muted">
                             <a href="/edituser" class="btn btn-outline-secondary">Edit User Details</a>
@@ -40,10 +40,39 @@
 
                 <br/><br/>
                 {% endfor %}
-            <a href="/printcsv" class="btn btn-primary">Print User CSV</a>
+            <ul class="pagination justify-content-center">
+                <a href="/printcsv" class="btn btn-primary">Print User CSV</a>
+            </ul>
+
         {% endif %}
 
+    <br/><br/>
+
     {% endif %}
+
+<nav aria-label="...">
+    <ul class="pagination">
+        {% if user1.has_previous %}
+
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ user1.previous_page_number }}">Previous</a></li>
+
+        {% endif %}
+
+        {% for i in pg %}
+
+            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+
+        {% endfor %}
+
+        {% if user1.has_next %}
+
+            <li class="page-item"><a class="page-link" href="?page={{ user1.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ user1.paginator.num_pages }}">Last &raquo</a></li>
+
+        {% endif %}
+    </ul>
+</nav>
 
 
 {% endblock %}

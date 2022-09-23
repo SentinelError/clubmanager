@@ -47,6 +47,29 @@
     </form>
 {% endif %}
 
+<nav aria-label="...">
+    <ul class="pagination">
+        {% if report1.has_previous %}
+
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ report1.previous_page_number }}">Previous</a></li>
+
+        {% endif %}
+
+        {% for i in pg %}
+
+            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+
+        {% endfor %}
+
+        {% if report1.has_next %}
+
+            <li class="page-item"><a class="page-link" href="?page={{ report1.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ report1.paginator.num_pages }}">Last &raquo</a></li>
+
+        {% endif %}
+    </ul>
+</nav>
 
 {% endblock %}
 
