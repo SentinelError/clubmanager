@@ -238,7 +238,7 @@ def delevents(request, eventid):
 def venues(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            p = Paginator(Venue.objects.all(), 5)
+            p = Paginator(Venue.objects.all().order_by('name'), 5)
             page = request.GET.get('page')
             venue1 = p.get_page(page)
             pg = 'n' * venue1.paginator.num_pages
