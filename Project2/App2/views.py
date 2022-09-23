@@ -1,4 +1,5 @@
 import calendar
+import csv
 from calendar import HTMLCalendar
 from datetime import datetime
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
@@ -8,11 +9,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from .models import Event, Venue, Report, Student
-
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-
+from django.core.paginator import Paginator
 
 
 # Registration View
@@ -60,7 +60,7 @@ def edit_request(request):
     else:
         form = NewEditForm(instance=request.user)
         Sform = StudentForm(instance=request.user)
-    return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, "Student": Sform })
+    return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, "Student": Sform})
 
 
 # Change Password View
@@ -233,14 +233,18 @@ def delevents(request, eventid):
 def venues(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            venue1 = Venue.objects.all()
-            return render(request, 'App2/venues.html', {'venue1': venue1})
+            p = Paginator(Venue.objects.all(), 5)
+            page = request.GET.get('page')
+            venue1 = p.get_page(page)
+            pg = 'n' * venue1.paginator.num_pages
+
+            return render(request, 'App2/venues.html', {'venue1': venue1, 'pg': pg})
         else:
-            messages.error(request, ("Only Admin can view venues"))
+            messages.error(request, "Only Admin can view venues")
             return HttpResponseRedirect('/')
 
     else:
-        messages.error(request, ("Please login to view venues."))
+        messages.error(request, "Please login to view venues.")
         return HttpResponseRedirect('/')
 
 
@@ -422,11 +426,11 @@ def users(request):
             return render(request, 'App2/users.html', {'user1': user1})
 
         else:
-            messages.error(request, ("Only Admin can view users"))
+            messages.error(request, "Only Admin can view users")
             return HttpResponseRedirect('/')
 
     else:
-        messages.error(request, ("Please login to view users."))
+        messages.error(request, "Please login to view users.")
         return HttpResponseRedirect('/')
 
 
@@ -459,3 +463,27 @@ def printreport(request, reportid):
     else:
         messages.error(request, ("Only the Admin or the Report Author can print the report."))
         return HttpResponseRedirect('/reports')
+
+
+# Generate CSV File
+
+def printcsv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="students.csv"'
+
+    writer = csv.writer(response)
+
+    # Calling Models
+
+    users = User.objects.all()
+    students = Student.objects.all()
+
+    # Column Details
+
+    writer.writerow(['Username', 'First Name', 'Last Name', 'Email', 'Club', 'Field', 'Year'])
+
+    for user, student in zip(users, students):
+        writer.writerow(
+            [user.username, user.first_name, user.last_name, user.email, student.club, student.field, student.year])
+
+    return response

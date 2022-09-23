@@ -26,20 +26,21 @@
                         </h5>
                         <div class="card-body">
                             <p class="card-text">
-
-                            <ul>
-                                <li>First Name: {{ user.first_name}}</li>
-                                <li>Last Name: {{ user.last_name}}</li>
-                                <li>Email: {{ user.email }}</li>
-                            </ul>
+                                <ul>
+                                    <li>First Name: {{ user.first_name }}</li>
+                                    <li>Last Name: {{ user.last_name }}</li>
+                                    <li>Email: {{ user.email }}</li>
+                                </ul>
                             </p>
                         </div>
                         <div class="card-footer text-muted">
                             <a href="/edituser" class="btn btn-outline-secondary">Edit User Details</a>
                         </div>
                     </div>
+
                 <br/><br/>
                 {% endfor %}
+            <a href="/printcsv" class="btn btn-primary">Print User CSV</a>
         {% endif %}
 
     {% endif %}

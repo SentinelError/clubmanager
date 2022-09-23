@@ -26,6 +26,7 @@ urlpatterns = [
     path("updatereport/<reportid>", views.updreport, name="updatereport" ),
     path("deletereport/<reportid>", views.delreport, name="delreport" ),
     path("printreport/<reportid>", views.printreport, name="printreport"),
+    path("printcsv", views.printcsv, name="printcsv"),
     path("password/", views.changepassword, name="changepassword" ),
     path("eventapproval", views.eventapproval, name="eventapproval"),
     path("users", views.users, name="users" ),
