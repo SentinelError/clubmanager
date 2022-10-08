@@ -45,7 +45,7 @@ def register_request(request):
 def edit_request(request):
     if request.method == "POST":
         form = NewEditForm(request.POST, instance=request.user)
-        Sform = StudentForm(request.POST, instance=request.user)
+        Sform = StudentForm(request.POST, instance=request.user.student)
         if form.is_valid() and Sform.is_valid():
             user = form.save()
 
@@ -59,7 +59,7 @@ def edit_request(request):
         messages.error(request, "Unsuccessful update. Invalid information.")
     else:
         form = NewEditForm(instance=request.user)
-        Sform = StudentForm(instance=request.user)
+        Sform = StudentForm(instance=request.user.student)
     return render(request=request, template_name="App2/edituser.html", context={"edit_form": form, "Student": Sform})
 
 
