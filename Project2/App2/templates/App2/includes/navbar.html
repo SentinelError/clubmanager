@@ -8,10 +8,13 @@
 
     <style>
 
+    .bg-custom-4{
+        background-image: linear-gradient(15deg, #348F50 0%, #56B4D3 100%);
+    }
+
     .bg-custom-3{
         background-image: linear-gradient(15deg, #AA076B 0%, #61045F 100%);
     }
-
 
     .bg-custom-2 {
         background-image: linear-gradient(15deg, #ee0979 0%, #ff6a00 100%);
@@ -97,7 +100,7 @@
             </ul>
           </div>
         </nav>
-    {% else %}
+    {% elif user.is_staff %}
 
         <!--Student Rep Navbar-->
 
@@ -131,6 +134,52 @@
                   <a class="dropdown-item" href="/reports">Archive</a>
                   <a class="dropdown-item" href="/addreport">Add Reports</a>
                 </div>
+              </li>
+            </ul>
+            <ul class="navbar-nav">
+                <!--Login/Logout buttons-->
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown9" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Welcome, {{user.username}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown9">
+                            <a class="dropdown-item" href="/edituser">Edit Profile</a>
+                            <a class="dropdown-item" href="/logout">Logout</a>
+                        </div>
+                    </li>
+
+                {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    {% else %}
+
+    <!--Student Navbar-->
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-custom-4">
+            <a class="navbar-brand" href="/">
+                <img src="https://aisat.ac.in/wp-content/uploads/2018/05/logo.png" class="rounded" width="30" height="30" alt="" loading="lazy">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent9">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/clubhomepage">Homepage<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/events">Events</a>
               </li>
             </ul>
             <ul class="navbar-nav">

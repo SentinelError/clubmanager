@@ -59,11 +59,10 @@ class Student(models.Model):
     club = models.ForeignKey(Club, blank=True, null=True, on_delete=models.CASCADE)
     field = models.ForeignKey(Field, blank=True, null=True, on_delete=models.CASCADE)
     year = models.ForeignKey(Year, blank=True, null=True, on_delete=models.CASCADE)
-    is_rep = models.BooleanField(default=False)
 
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 class Report(models.Model):
 

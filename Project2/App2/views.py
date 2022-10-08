@@ -177,7 +177,7 @@ def updevents(request, eventid):
                 return HttpResponseRedirect('/events')
 
         else:
-            messages.error(request, ("Only the Admin or the Report Author can update the event."))
+            messages.error(request, ("Only the Admin or Event Creator can update the event."))
             return HttpResponseRedirect('/events')
 
     else:
@@ -193,23 +193,27 @@ def updevents(request, eventid):
 
 def addevents(request):
     if request.user.is_authenticated:
-        initial_data = {
-            'name': 'Training'
-        }
-        if request.method == 'POST':
-            if request.user.is_superuser:
-                form = EventFormA(request.POST)
-            else:
-                form = EventFormS(request.POST)
+        if request.user.is_staff:
+            initial_data = {
+                'name': 'Training'
+            }
+            if request.method == 'POST':
+                if request.user.is_superuser:
+                    form = EventFormA(request.POST)
+                else:
+                    form = EventFormS(request.POST)
 
-            if form.is_valid():
-                form.save()
-                messages.success(request, ("Event Added."))
-                return HttpResponseRedirect('/events')
-        if request.user.is_superuser:
-            form = EventFormA()
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, ("Event Added."))
+                    return HttpResponseRedirect('/events')
+            if request.user.is_superuser:
+                form = EventFormA()
+            else:
+                form = EventFormS(initial=initial_data)
         else:
-            form = EventFormS(initial=initial_data)
+            messages.error(request, ("Only Admins and Student Representatives can add Events."))
+            return HttpResponseRedirect('/')
     else:
         messages.error(request, ("Please login to add events."))
         return HttpResponseRedirect('/')
@@ -325,15 +329,18 @@ def addvenues(request):
 
 def reports(request):
     if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            p = Paginator(Report.objects.all().order_by('report_date'), 3)
+            page = request.GET.get('page')
+            report1 = p.get_page(page)
+            pg = 'n' * report1.paginator.num_pages
 
-        p = Paginator(Report.objects.all().order_by('report_date'), 3)
-        page = request.GET.get('page')
-        report1 = p.get_page(page)
-        pg = 'n' * report1.paginator.num_pages
-
-        return render(request, 'App2/reports.html', {'report1': report1, 'pg': pg, })
+            return render(request, 'App2/reports.html', {'report1': report1, 'pg': pg, })
+        else:
+            messages.error(request, "Only Student Representatives and Admins can view Reports.")
+            return HttpResponseRedirect('/')
     else:
-        messages.error(request, "Please login to view the archive")
+        messages.error(request, "Please login to view Reports.")
         return HttpResponseRedirect('/')
 
 
@@ -341,18 +348,21 @@ def reports(request):
 
 def addreport(request):
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = ReportForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, ("Report Added."))
-                return HttpResponseRedirect('/reports')
-        form = ReportForm()
-        return render(request=request, template_name='App2/addreport.html', context={'form': form, })
+        if request.user.is_staff:
+            if request.method == 'POST':
+                form = ReportForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, ("Report Added."))
+                    return HttpResponseRedirect('/reports')
+            form = ReportForm()
+            return render(request=request, template_name='App2/addreport.html', context={'form': form, })
+        else:
+            messages.error(request, "Only Student Representatives and Admins can view Reports.")
+            return HttpResponseRedirect('/')
     else:
-        messages.error(request, ("Please login to add a report"))
+        messages.error(request, "Please login to view Reports.")
         return HttpResponseRedirect('/')
-
 
 # Update Report View
 
